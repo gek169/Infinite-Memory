@@ -1,0 +1,54 @@
+# Infinite Memory simulation for C++
+
+I have been thinking a lot lately about *why* invalid memory accesses occur and how can they be stopped.
+
+There are a few fundamentals principles which I keep in mind-
+
+1) if only valid memory locations have syntactically correct names in the language, then it is impossible
+to index something out of bounds or access invalid memory, because doing so is syntactically incorrect, thus,
+all names are "valid"
+
+2) If there is an infinite set of syntactically correct names in the language, but only some of them map to valid
+memory locations, it is possible to index memory out-of-bounds and these names should be called "invalid", and
+this class of error is an "invalid name error". A language meeting the conditions of 1 has no invalid name errors.
+
+3) If there is an infinite set of valid names in a language which maps only to valid memory locations,
+it is impossible using those names to access invalid memory locations.
+
+4) It is non-trivial to brute-force verify an algorithm's memory-correctness on arbitrarily sized containers,
+but with power of two containers, it is extremely trivial.
+
+5) If multiple names in a language can refer to the same memory location, there is the potential for errors
+	where the programmer believes they are accessing a unique memory location which is not. (Aliasing error)
+
+
+6) power-of-two size containers can provide the infinite set of valid names using the bitwise and,
+but only the first 2^n names are unique, all others are aliases of the first 2^n.
+
+7) Non-power-of-two size containers can be forced to provide the infinite set of valid names using modulo, but...
+	* Modulo is slow (Fairly..)
+	* Division by zero problem
+	* Same aliasing problem
+
+8) Any program which is designed to run on a computer using a finite amount of memory can be designed
+to use only names which are guaranteed to be valid and unique if used.
+
+9) Programs that contain invalid name errors can be corrected to be memory-access-correct, but not necessarily
+functionally correct, by replacing the name access convention with a system which
+provides the infinite set of valid names.
+
+10) Programs that contain aliasing errors can be corrected to be functionally correct
+by replacing the name access convention with a system which provides the infinite set of unique, valid names.
+
+
+The solutions, 9 and 10, are presented in this repository.
+
+Roundmem<type, pow2size>:
+A power-of-two container which provides the infinite set of valid names, which maps to a finite set
+of memory locations*
+
+InfVec<type>:
+an arbitrarily sized container which provides the infinite set of unique, valid names*
+
+*: 
+Only for single-threaded code.
