@@ -20,6 +20,8 @@ class RoundMem{
 	private:
 		std::array<T, (size_t)1<<(pow2size-1)> data;
 };
+static_assert(sizeof(RoundMem<char, 3>) == 4);
+static_assert(sizeof(RoundMem<char, 4>) == 8);
 
 template <typename T>
 class InfVec{
